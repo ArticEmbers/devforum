@@ -5,7 +5,7 @@ import React, {
     from "react";
 import "./NewPost.css";
 
-const NewPost = ({ onAdd }) = > {
+const NewPost = ({ onAdd }) => {
     const [content, setContent] = useState("");
     const handleSubmit = () => {
         if (!content.trim()) return;
