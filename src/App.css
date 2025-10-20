@@ -1,13 +1,14 @@
 body {
-    margin: 0;
     font-family: Arial, sans-serif;
-    background: #1a1a1a;
-    color: #f0e5fa;
+    background: #121212;
+    color: #eee;
+    margin: 0;
+    padding: 0;
 }
 
 .app-container {
-    max-width: 1200px;
-    margin: 0 auto;
+    max-width: 800px;
+    margin: auto;
     padding: 20px;
 }
 
@@ -15,49 +16,20 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
 }
-
-    header h1 {
-        font-family: cursive;
-        color: #e8c3f9;
-    }
 
 .logout-btn {
-    padding: 8px 18px;
+    background: #ff4d4f;
     border: none;
-    border-radius: 10px;
-    background: linear-gradient(90deg, #5c4b8b, #e8c3f9);
-    color: #fff;
+    padding: 8px 12px;
+    border-radius: 5px;
+    color: white;
     cursor: pointer;
-    font-size: 14px;
-    transition: transform 0.2s;
-}
-
-    .logout-btn:hover {
-        transform: scale(1.05);
-    }
-
-.main-content {
-    display: flex;
-    gap: 20px;
-}
-
-aside {
-    width: 250px;
-}
-
-.forum-section {
-    flex: 1;
 }
 
 .posts-container {
-    margin-top: 20px;
-}
-
-.login-placeholder {
-    text-align: center;
-    margin-top: 50px;
-    font-size: 18px;
-    color: #a79bbb;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }

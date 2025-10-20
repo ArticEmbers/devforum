@@ -1,0 +1,32 @@
+.post-card {
+    background: linear-gradient(135deg, #5c4b8b, #e8c3f9);
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 12px;
+    color: white;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+}
+
+.post-user {
+    font-family: 'Cursive', sans-serif;
+}
+
+.delete-btn {
+    background: #d1b3e0;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #5c4b8b;
+}
+
+    .delete-btn:hover {
+        background: #e8c3f9;
+    }

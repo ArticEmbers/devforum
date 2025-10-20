@@ -2,38 +2,24 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    background: linear-gradient(145deg, #5c4b8b, #7b6f95, #a79bbb, #d1b3e0, #e8c3f9);
-    padding: 15px;
-    border-radius: 15px;
     margin-bottom: 20px;
 }
 
     .newpost-form textarea {
-        resize: none;
-        border-radius: 10px;
-        border: none;
         padding: 10px;
-        font-size: 14px;
-        background-color: rgba(255, 255, 255, 0.05);
-        color: #fff;
+        border-radius: 5px;
+        border: none;
+        resize: vertical;
+        min-height: 60px;
     }
-
-        .newpost-form textarea::placeholder {
-            color: #ddd;
-        }
 
     .newpost-form button {
+        width: 100px;
         align-self: flex-end;
-        padding: 8px 20px;
+        padding: 6px 12px;
         border: none;
-        border-radius: 10px;
-        background: linear-gradient(90deg, #5c4b8b, #e8c3f9);
-        color: #fff;
+        border-radius: 5px;
+        background: linear-gradient(to right, #4facfe, #00f2fe);
+        color: white;
         cursor: pointer;
-        font-size: 14px;
-        transition: transform 0.2s;
     }
-
-        .newpost-form button:hover {
-            transform: scale(1.05);
-        }

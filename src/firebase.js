@@ -1,5 +1,6 @@
+// Firebase configuration and exports
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, query, orderBy, serverTimestamp } from "firebase/firestore";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAUJtKUZtF9hjC3-QZv0_Bf6DltMNVJDhc",
@@ -11,4 +12,6 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
+const db = getFirestore(app);
+
+export { db, collection, addDoc, deleteDoc, doc, onSnapshot, query, orderBy, serverTimestamp };

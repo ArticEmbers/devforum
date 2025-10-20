@@ -1,22 +1,16 @@
 import React from "react";
-import "./Post.css";
+import "./Posts.css";
 
-export default function Post({ post, onDelete, currentUser }) {
+function Posts({ post, currentUser, onDelete }) {
     return (
-        <div className="post-card">
-            <div className="post-header">
-                <span className="post-author">{post.author}</span>
-                <span className="post-date">{post.date}</span>
-                {post.author === currentUser && (
-                    <button
-                        className="delete-btn"
-                        onClick={() => onDelete(post.id)}
-                    >
-                        Delete
-                    </button>
-                )}
-            </div>
-            <div className="post-content">{post.content}</div>
+        <div className={`post ${post.username === currentUser ? "active-user" : ""}`}>
+            <p className="post-user">{post.username}</p>
+            <p className="post-text">{post.text}</p>
+            {post.username === currentUser && (
+                <button className="delete-btn" onClick={() => onDelete(post.id, post.username)}>Delete</button>
+            )}
         </div>
     );
 }
+
+export default Posts;
