@@ -1,84 +1,120 @@
 import React, { useState, useEffect } from "react";
-import { db, collection, onSnapshot, query, orderBy, addDoc, deleteDoc, doc, serverTimestamp } from "./firebase";
+import { db } from "./firebase";
+import {
+    collection,
+    addDoc,
+    deleteDoc,
+    doc,
+    onSnapshot,
+    query,
+    orderBy,
+} from "firebase/firestore";
 import NewPost from "./components/NewPost";
-import Posts from "./components/Posts";
-import "./App.css";
+import Post from "./components/Post";
 
 function App() {
+    const [currentUser, setCurrentUser] = useState(null);
+    const [users, setUsers] = useState([]); // list of members
     const [posts, setPosts] = useState([]);
-    const [user, setUser] = useState({ username: "", password: "" });
-    const [loggedIn, setLoggedIn] = useState(false);
+    const [loginUsername, setLoginUsername] = useState("");
+    const [loginPassword, setLoginPassword] = useState("");
 
-    const USERS = {
-        Luna: "Endurance:2008/Rapido.",
-        Amy: "fyjhym-vorxU2-sarnuz"
-    };
-
-    const handleLogin = (username, password) => {
-        if (USERS[username] && USERS[username] === password) {
-            setUser({ username });
-            setLoggedIn(true);
-        } else {
-            alert("Wrong username or password!");
-        }
-    };
-
-    const handleLogout = () => {
-        setLoggedIn(false);
-        setUser({ username: "", password: "" });
-    };
-
+    // Load users
     useEffect(() => {
-        const q = query(collection(db, "posts"), orderBy("timestamp", "desc"));
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-            setPosts(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        const usersQuery = collection(db, "activeMembers");
+        const unsubscribe = onSnapshot(usersQuery, (snapshot) => {
+            const members = snapshot.docs.map((doc) => doc.data());
+            setUsers(members);
         });
         return () => unsubscribe();
     }, []);
 
-    const handleAddPost = async (text) => {
-        const newPost = {
-            username: user.username,
-            text,
-            timestamp: serverTimestamp()
-        };
-        await addDoc(collection(db, "posts"), newPost);
-    };
+    // Load posts
+    useEffect(() => {
+        const postsQuery = query(collection(db, "posts"), orderBy("timestamp", "desc"));
+        const unsubscribe = onSnapshot(postsQuery, (snapshot) => {
+            const allPosts = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+            setPosts(allPosts);
+        });
+        return () => unsubscribe();
+    }, []);
 
-    const handleDeletePost = async (postId, postUser) => {
-        if (postUser === user.username) {
-            await deleteDoc(doc(db, "posts", postId));
-        } else {
-            alert("You can only delete your own posts!");
-        }
-    };
-
-    if (!loggedIn) {
-        return (
-            <div className="login-container">
-                <h2>Login</h2>
-                <input placeholder="Username" id="username" />
-                <input placeholder="Password" type="password" id="password" />
-                <button onClick={() => handleLogin(
-                    document.getElementById("username").value,
-                    document.getElementById("password").value
-                )}>Login</button>
-            </div>
+    const handleLogin = () => {
+        const user = users.find(
+            (u) => u.username === loginUsername && u.password === loginPassword
         );
-    }
+        if (user) setCurrentUser(user);
+        else alert("Invalid username or password");
+    };
+
+    const handleLogout = () => {
+        setCurrentUser(null);
+    };
+
+    const addPost = async (content) => {
+        if (!currentUser) return;
+        await addDoc(collection(db, "posts"), {
+            author: currentUser.username,
+            content,
+            timestamp: new Date(),
+        });
+    };
+
+    const removePost = async (id, author) => {
+        if (author !== currentUser?.username) return alert("You can only delete your posts");
+        await deleteDoc(doc(db, "posts", id));
+    };
 
     return (
         <div className="app-container">
-            <header>
-                <h1>DevForum</h1>
-                <button className="logout-btn" onClick={handleLogout}>Logout</button>
-            </header>
-            <NewPost onAdd={handleAddPost} />
-            <div className="posts-container">
-                {posts.length ? posts.map(post => (
-                    <Posts key={post.id} post={post} currentUser={user.username} onDelete={handleDeletePost} />
-                )) : <p>No posts yet</p>}
-            </div>
+            {!currentUser ? (
+                <div className="login-form">
+                    <input
+                        placeholder="Username"
+                        value={loginUsername}
+                        onChange={(e) => setLoginUsername(e.target.value)}
+                    />
+                    <input
+                        placeholder="Password"
+                        type="password"
+                        value={loginPassword}
+                        onChange={(e) => setLoginPassword(e.target.value)}
+                    />
+                    <button onClick={handleLogin}>Login</button>
+                </div>
+            ) : (
+                <>
+                    <div className="header">
+                        <span>Welcome, {currentUser.username}</span>
+                        <button onClick={handleLogout}>Logout</button>
+                    </div>
+
+                    <NewPost onAdd={addPost} />
+
+                    <div className="posts-container">
+                        {posts.map((post) => (
+                            <Post
+                                key={post.id}
+                                post={post}
+                                currentUser={currentUser}
+                                onDelete={removePost}
+                            />
+                        ))}
+                    </div>
+
+                    <div className="active-users">
+                        <h3>Active Members</h3>
+                        <ul>
+                            {users.map((user) => (
+                                <li key={user.username}>
+                                    {user.username} — {user.rank || "member"}
+                                    {user.username === currentUser.username && " (You)"}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </>
+            )}
         </div>
     );
 }
