@@ -1,48 +1,35 @@
 .posts-container {
-  max-width: 700px;
-  margin: 20px auto;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+    width: 90%;
+    max-width: 600px;
+    margin: 0 auto 40px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .post {
-  background: linear-gradient(145deg, #7b6f95, #d1b3e0);
-  padding: 15px;
-  border-radius: 15px;
-  color: #fff;
-  font-family: 'Arial', sans-serif;
-  position: relative;
+    background: linear-gradient(135deg, #5c4b8b, #e8c3f9);
+    padding: 15px;
+    border-radius: 12px;
+    color: white;
+    font-family: Arial, sans-serif;
 }
 
 .post-header {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
-  font-family: 'Cursive', sans-serif;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.post-author {
-  font-weight: bold;
-}
+    .post-header button {
+        background: #a79bbb;
+        border: none;
+        border-radius: 8px;
+        padding: 5px 10px;
+        cursor: pointer;
+        color: white;
+    }
 
-.post-content {
-  font-size: 1rem;
-}
-
-.delete-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: #e8c3f9;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  color: #5c4b8b;
-  font-weight: bold;
-}
-
-.delete-btn:hover {
-  opacity: 0.8;
-}
+        .post-header button:hover {
+            background: #d1b3e0;
+        }

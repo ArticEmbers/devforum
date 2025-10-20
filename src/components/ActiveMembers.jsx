@@ -9,8 +9,7 @@ export default function ActiveMembers({ members }) {
             <ul>
                 {members.map((m) => (
                     <li key={m.username}>
-                        <span className="member-name">{m.username}</span>
-                        <span className={`member-role ${m.role}`}>{m.role}</span>
+                        <span className="member-name">{m.username}</span> - <span className="member-role">{m.role}</span>
                     </li>
                 ))}
             </ul>

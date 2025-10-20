@@ -1,9 +1,9 @@
+// src/App.jsx
 import React, { useState, useEffect } from "react";
-import { db, collection, addDoc, deleteDoc, doc, onSnapshot, query, orderBy, serverTimestamp } from "./firebase";
-import ActiveMembers from "./components/ActiveMembers";
+import { addPost, deletePost, subscribeToPosts, addActiveMember, removeActiveMember, subscribeToActiveMembers } from "./firebase";
 import NewPost from "./components/NewPost";
 import Posts from "./components/Posts";
-import "./App.css";
+import ActiveMembers from "./components/ActiveMembers";
 
 export default function App() {
     const users = [
@@ -11,68 +11,46 @@ export default function App() {
         { username: "Amy", password: "fyjhym-vorxU2-sarnuz", role: "member" },
     ];
 
-    const [currentUser, setCurrentUser] = useState(
-        () => localStorage.getItem("currentUser") || null
-    );
+    const [currentUser, setCurrentUser] = useState(null);
     const [passwordInput, setPasswordInput] = useState("");
     const [error, setError] = useState("");
     const [posts, setPosts] = useState([]);
-    const [membersList, setMembersList] = useState([]);
+    const [activeMembers, setActiveMembers] = useState([]);
 
-    // Listen to posts in Firestore
-    useEffect(() => {
-        const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-            setPosts(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-        });
-        return () => unsubscribe();
-    }, []);
+    // Subscribe to posts
+    useEffect(() => subscribeToPosts(setPosts), []);
 
-    // Add current user to active members
-    useEffect(() => {
-        if (currentUser) {
-            const user = users.find(u => u.username === currentUser);
-            if (user) {
-                setMembersList((prev) => {
-                    if (!prev.some((m) => m.username === user.username)) {
-                        return [...prev, { username: user.username, role: user.role }];
-                    }
-                    return prev;
-                });
-            }
-        }
-    }, [currentUser]);
+    // Subscribe to active members in real-time
+    useEffect(() => subscribeToActiveMembers(setActiveMembers), []);
 
-    const handleLogin = (e) => {
+    // Login
+    const handleLogin = async (e) => {
         e.preventDefault();
-        const user = users.find((u) => u.password === passwordInput);
+        const user = users.find(u => u.password === passwordInput);
         if (user) {
             setCurrentUser(user.username);
-            localStorage.setItem("currentUser", user.username); // persist login
             setPasswordInput("");
             setError("");
+            await addActiveMember(user.username, user.role);
         } else {
             setError("Invalid password");
         }
     };
 
-    const handleLogout = () => {
+    // Logout
+    const handleLogout = async () => {
+        if (currentUser) await removeActiveMember(currentUser);
         setCurrentUser(null);
-        localStorage.removeItem("currentUser");
     };
 
-    const addPost = async (content) => {
+    const handleAddPost = async (content) => {
         if (!currentUser) return;
-        await addDoc(collection(db, "posts"), {
-            author: currentUser,
-            content,
-            createdAt: serverTimestamp(),
-        });
+        await addPost(currentUser, content);
     };
 
-    const deletePost = async (id, author) => {
+    const handleDeletePost = async (id, author) => {
         if (currentUser === "Luna" || currentUser === author) {
-            await deleteDoc(doc(db, "posts", id));
+            await deletePost(id);
         } else {
             alert("You can only delete your own posts!");
         }
@@ -97,22 +75,12 @@ export default function App() {
                     {error && <p style={{ color: "red" }}>{error}</p>}
                 </form>
             ) : (
-                <p style={{ textAlign: "center", marginBottom: "10px" }}>
-                    Logged in as <strong>{currentUser}</strong>
-                </p>
+                <p style={{ textAlign: "center" }}>Logged in as <strong>{currentUser}</strong></p>
             )}
 
-            <ActiveMembers members={membersList} />
-
-            {currentUser && <NewPost addPost={addPost} />}
-
-            {currentUser && (
-                <Posts
-                    posts={posts}
-                    deletePost={deletePost}
-                    currentUser={currentUser}
-                />
-            )}
+            <ActiveMembers members={activeMembers} />
+            {currentUser && <NewPost addPost={handleAddPost} />}
+            {currentUser && <Posts posts={posts} deletePost={handleDeletePost} currentUser={currentUser} />}
         </div>
     );
 }

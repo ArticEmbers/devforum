@@ -7,15 +7,15 @@ export default function NewPost({ addPost }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (content.trim() === "") return;
-        addPost(content);
+        if (!content.trim()) return;
+        addPost(content.trim());
         setContent("");
     };
 
     return (
         <form className="new-post-form" onSubmit={handleSubmit}>
             <textarea
-                placeholder="Write a new post..."
+                placeholder="Write something..."
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
             />

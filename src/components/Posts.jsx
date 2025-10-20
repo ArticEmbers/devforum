@@ -1,25 +1,19 @@
+// src/components/Posts.jsx
 import React from "react";
 import "./Posts.css";
 
 export default function Posts({ posts, deletePost, currentUser }) {
-    if (!posts.length) return <p style={{ textAlign: "center" }}>No posts yet.</p>;
-
     return (
-        <div className="posts">
-            {posts.map((post) => (
-                <div key={post.id} className="post-card">
+        <div className="posts-container">
+            {posts.map(post => (
+                <div className="post" key={post.id}>
                     <div className="post-header">
-                        <span className="post-author">{post.author}</span>
-                        {(post.author === currentUser || currentUser === "ArticEmbers") && (
-                            <button
-                                className="delete-btn"
-                                onClick={() => deletePost(post.id)}
-                            >
-                                Delete
-                            </button>
+                        <strong>{post.author}</strong>
+                        {(currentUser === "Luna" || currentUser === post.author) && (
+                            <button onClick={() => deletePost(post.id, post.author)}>Delete</button>
                         )}
                     </div>
-                    <p className="post-content">{post.content}</p>
+                    <p>{post.content}</p>
                 </div>
             ))}
         </div>
