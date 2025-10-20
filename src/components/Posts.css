@@ -1,43 +1,48 @@
-.posts {
+.posts-container {
+  max-width: 700px;
+  margin: 20px auto;
   display: flex;
   flex-direction: column;
   gap: 15px;
-  max-width: 700px;
-  margin: 20px auto;
 }
 
-.post-card {
-  background: linear-gradient(135deg, #7b6f95, #a79bbb);
-  border-radius: 12px;
+.post {
+  background: linear-gradient(145deg, #7b6f95, #d1b3e0);
   padding: 15px;
+  border-radius: 15px;
   color: #fff;
-  font-family: Arial, sans-serif;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  font-family: 'Arial', sans-serif;
+  position: relative;
 }
 
 .post-header {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 8px;
-  font-weight: bold;
-  font-family: "Cursive", sans-serif;
+  margin-bottom: 10px;
+  font-family: 'Cursive', sans-serif;
 }
 
-.delete-btn {
-  background: #d1b3e0;
-  border: none;
-  border-radius: 6px;
-  padding: 4px 10px;
-  cursor: pointer;
-  color: #5c4b8b;
+.post-author {
   font-weight: bold;
-  transition: background 0.2s;
-}
-
-.delete-btn:hover {
-  background: #e8c3f9;
 }
 
 .post-content {
-  font-family: Arial, sans-serif;
+  font-size: 1rem;
+}
+
+.delete-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #e8c3f9;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #5c4b8b;
+  font-weight: bold;
+}
+
+.delete-btn:hover {
+  opacity: 0.8;
 }

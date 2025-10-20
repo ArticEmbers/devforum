@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { db, collection, addDoc, deleteDoc, doc, onSnapshot, query, orderBy } from "./firebase";
+import { db, collection, addDoc, deleteDoc, doc, onSnapshot, query, orderBy, serverTimestamp } from "./firebase";
 import ActiveMembers from "./components/ActiveMembers";
 import NewPost from "./components/NewPost";
 import Posts from "./components/Posts";
@@ -7,8 +7,8 @@ import "./App.css";
 
 export default function App() {
     const users = [
-        { username: "ArticEmbers", password: "Endurance:2008/Rapido.", role: "admin" },
-        { username: "Amy", password: "fyjhym-vorxU2-sarnuz", role: "member" },
+        { username: "Luna", password: "Endurance:2008/Rapido.", role: "Administrator" },
+        { username: "Amy", password: "Friend1Pass", role: "Member" },
         { username: "Friend2", password: "Friend2Pass", role: "member" },
     ];
 
@@ -18,7 +18,7 @@ export default function App() {
     const [posts, setPosts] = useState([]);
     const [membersList, setMembersList] = useState([]);
 
-    // Subscribe to Firestore posts
+    // Listen to posts in Firestore
     useEffect(() => {
         const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
         const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -27,7 +27,7 @@ export default function App() {
         return () => unsubscribe();
     }, []);
 
-    // Login
+    // Login handler
     const handleLogin = (e) => {
         e.preventDefault();
         const user = users.find((u) => u.password === passwordInput);
@@ -36,7 +36,7 @@ export default function App() {
             setPasswordInput("");
             setError("");
 
-            // Add to active members if not already there
+            // Add to active members
             setMembersList((prev) => {
                 if (!prev.some((m) => m.username === user.username)) {
                     return [...prev, { username: user.username, role: user.role }];
@@ -48,13 +48,13 @@ export default function App() {
         }
     };
 
-    // Add new post
+    // Add post to Firestore
     const addPost = async (content) => {
         if (!currentUser) return;
         await addDoc(collection(db, "posts"), {
             author: currentUser,
             content,
-            createdAt: new Date(),
+            createdAt: serverTimestamp(), // Firestore timestamp
         });
     };
 

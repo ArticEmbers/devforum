@@ -1,50 +1,35 @@
 .active-members {
-  max-width: 700px;
+  max-width: 400px;
   margin: 20px auto;
-  background: linear-gradient(135deg, #7b6f95, #d1b3e0);
-  padding: 15px 20px;
-  border-radius: 12px;
-  color: #fff;
-  font-family: "Cursive", sans-serif;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  background: #5c4b8b;
+  border-radius: 15px;
+  padding: 15px;
+  color: #e8c3f9;
+  font-family: 'Arial', sans-serif;
 }
 
-.active-members h2 {
+.active-members h3 {
+  text-align: center;
+  font-family: 'Cursive', sans-serif;
   margin-bottom: 10px;
-  color: #e8c3f9;
 }
 
 .active-members ul {
   list-style: none;
   padding: 0;
-  margin: 0;
 }
 
 .active-members li {
   display: flex;
   justify-content: space-between;
-  padding: 6px 0;
-  border-bottom: 1px solid rgba(92, 75, 139, 0.3);
+  padding: 5px 0;
 }
 
-.active-members li:last-child {
-  border-bottom: none;
-}
-
-/* Member role styling */
-.active-members .member {
-  color: #e8c3f9; /* bright light purple for visibility */
+.member-role.admin {
   font-weight: bold;
+  color: #fff;
 }
 
-/* Admin role styling */
-.active-members .admin {
-  color: #ffd700; /* gold for admin */
-  font-weight: bold;
-}
-
-.active-members .role {
-  font-size: 0.9em;
-  font-weight: bold;
-  margin-left: 6px;
+.member-role.member {
+  color: #d1b3e0;
 }
