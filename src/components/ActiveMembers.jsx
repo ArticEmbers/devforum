@@ -1,13 +1,16 @@
 import React from "react";
+import "./ActiveMembers.css";
 
 export default function ActiveMembers({ members }) {
+    if (!members.length) return null;
+
     return (
         <div className="active-members">
-            <h3>Active Members</h3>
+            <h2>Active Members</h2>
             <ul>
                 {members.map((member) => (
-                    <li key={member.username}>
-                        {member.username} {member.role === "admin" && "(Admin)"}
+                    <li key={member.username} className={member.role}>
+                        {member.username} <span className="role">({member.role})</span>
                     </li>
                 ))}
             </ul>
