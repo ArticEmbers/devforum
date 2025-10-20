@@ -1,81 +1,26 @@
-body {
+/* Dark background with gradient overlay */
+body, html, #root {
   margin: 0;
+  padding: 0;
   font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #5c4b8b, #e8c3f9);
+  background: linear-gradient(145deg, #5c4b8b, #e8c3f9);
   color: #fff;
+  min-height: 100vh;
 }
 
-.app {
-  max-width: 800px;
-  margin: auto;
+/* Container for main content */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: 20px;
 }
 
-header h1 {
-  font-family: cursive;
-  text-align: center;
-  font-size: 2.5rem;
-  margin-bottom: 20px;
-}
-
-.user-select {
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-.user-select select {
-  padding: 4px 8px;
-  border-radius: 6px;
-  border: none;
-}
-
-.active-members {
-  margin-bottom: 20px;
-  background: rgba(0,0,0,0.3);
-  padding: 10px;
-  border-radius: 10px;
-}
-
-.active-members ul {
-  list-style: none;
-  padding: 0;
-}
-
-.new-post textarea {
+/* Header styling */
+header {
   width: 100%;
-  border-radius: 10px;
-  border: none;
-  padding: 10px;
-  margin-bottom: 10px;
-}
-
-.new-post button {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 10px;
-  background: #7b6f95;
-  color: #fff;
-  cursor: pointer;
-}
-
-.post {
-  background: rgba(0,0,0,0.3);
-  padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 10px;
-}
-
-.post-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.post-header button {
-  padding: 2px 6px;
-  border: none;
-  border-radius: 6px;
-  background: #a79bbb;
-  color: #000;
-  cursor: pointer;
+  text-align: center;
+  font-family: 'Cursive', sans-serif;
+  font-size: 2rem;
+  margin-bottom: 20px;
 }

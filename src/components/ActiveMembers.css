@@ -1,35 +1,34 @@
 .active-members {
-    width: 90%;
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 10px;
-    background: #7b6f95;
+    background: rgba(92, 75, 139, 0.8);
     border-radius: 12px;
-    color: #e8c3f9;
-    font-family: "Courier New", monospace;
+    padding: 15px;
+    width: 250px;
+    margin-bottom: 20px;
 }
 
     .active-members h3 {
+        font-family: 'Cursive', sans-serif;
         text-align: center;
-        font-family: cursive;
+        margin-bottom: 10px;
     }
 
     .active-members ul {
         list-style: none;
         padding: 0;
+        margin: 0;
     }
 
     .active-members li {
+        padding: 8px;
+        margin-bottom: 6px;
+        border-radius: 6px;
+        background: linear-gradient(90deg, #7b6f95, #d1b3e0);
         display: flex;
         justify-content: space-between;
-        padding: 5px 0;
+        align-items: center;
+        font-weight: bold;
     }
 
-.member-name {
-    font-weight: bold;
-}
-
-.member-role {
-    font-style: italic;
-    color: #d1b3e0;
-}
+    .active-members .admin {
+        background: linear-gradient(90deg, #d1b3e0, #e8c3f9);
+    }

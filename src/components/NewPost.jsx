@@ -1,25 +1,25 @@
-// src/components/NewPost.jsx
 import React, { useState } from "react";
 import "./NewPost.css";
 
-export default function NewPost({ addPost }) {
+const NewPost = ({ onAddPost, currentUser }) => {
     const [content, setContent] = useState("");
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (!content.trim()) return;
-        addPost(content.trim());
+    const handlePost = () => {
+        if (content.trim() === "") return;
+        onAddPost(content);
         setContent("");
     };
 
     return (
-        <form className="new-post-form" onSubmit={handleSubmit}>
+        <div className="new-post">
             <textarea
-                placeholder="Write something..."
+                placeholder={`What's on your mind, ${currentUser.username}?`}
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
             />
-            <button type="submit">Post</button>
-        </form>
+            <button onClick={handlePost}>Post</button>
+        </div>
     );
-}
+};
+
+export default NewPost;

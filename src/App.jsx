@@ -1,86 +1,58 @@
-// src/App.jsx
 import React, { useState, useEffect } from "react";
-import { addPost, deletePost, subscribeToPosts, addActiveMember, removeActiveMember, subscribeToActiveMembers } from "./firebase";
+import ActiveMembers from "./components/ActiveMembers";
 import NewPost from "./components/NewPost";
 import Posts from "./components/Posts";
-import ActiveMembers from "./components/ActiveMembers";
+import "./App.css";
+import { db } from "./firebase"; // your Firestore init
+import { collection, addDoc, onSnapshot, deleteDoc, doc, query, orderBy } from "firebase/firestore";
 
-export default function App() {
-    const users = [
-        { username: "Luna", password: "Endurance:2008/Rapido.", role: "admin" },
-        { username: "Amy", password: "fyjhym-vorxU2-sarnuz", role: "member" },
-    ];
-
-    const [currentUser, setCurrentUser] = useState(null);
-    const [passwordInput, setPasswordInput] = useState("");
-    const [error, setError] = useState("");
+const App = () => {
     const [posts, setPosts] = useState([]);
-    const [activeMembers, setActiveMembers] = useState([]);
+    const [members, setMembers] = useState([]);
+    const [currentUser, setCurrentUser] = useState({ username: "Luna", role: "admin" });
 
-    // Subscribe to posts
-    useEffect(() => subscribeToPosts(setPosts), []);
+    useEffect(() => {
+        // Load posts in real-time
+        const postsQuery = query(collection(db, "posts"), orderBy("timestamp", "desc"));
+        const unsubscribePosts = onSnapshot(postsQuery, (snapshot) => {
+            const postsData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+            setPosts(postsData);
+        });
 
-    // Subscribe to active members in real-time
-    useEffect(() => subscribeToActiveMembers(setActiveMembers), []);
+        // Load active members in real-time
+        const membersQuery = collection(db, "activeMembers");
+        const unsubscribeMembers = onSnapshot(membersQuery, (snapshot) => {
+            const membersData = snapshot.docs.map((doc) => doc.data());
+            setMembers(membersData);
+        });
 
-    // Login
-    const handleLogin = async (e) => {
-        e.preventDefault();
-        const user = users.find(u => u.password === passwordInput);
-        if (user) {
-            setCurrentUser(user.username);
-            setPasswordInput("");
-            setError("");
-            await addActiveMember(user.username, user.role);
-        } else {
-            setError("Invalid password");
-        }
-    };
-
-    // Logout
-    const handleLogout = async () => {
-        if (currentUser) await removeActiveMember(currentUser);
-        setCurrentUser(null);
-    };
+        return () => {
+            unsubscribePosts();
+            unsubscribeMembers();
+        };
+    }, []);
 
     const handleAddPost = async (content) => {
-        if (!currentUser) return;
-        await addPost(currentUser, content);
+        await addDoc(collection(db, "posts"), {
+            author: currentUser.username,
+            role: currentUser.role,
+            content,
+            timestamp: Date.now(),
+        });
     };
 
-    const handleDeletePost = async (id, author) => {
-        if (currentUser === "Luna" || currentUser === author) {
-            await deletePost(id);
-        } else {
-            alert("You can only delete your own posts!");
-        }
+    const handleDeletePost = async (postId) => {
+        await deleteDoc(doc(db, "posts", postId));
     };
 
     return (
-        <div className="app">
-            <header>
-                <h1>DevForum</h1>
-                {currentUser && <button onClick={handleLogout} className="logout-btn">Logout</button>}
-            </header>
-
-            {!currentUser ? (
-                <form onSubmit={handleLogin} className="login-form">
-                    <input
-                        type="password"
-                        placeholder="Enter password"
-                        value={passwordInput}
-                        onChange={(e) => setPasswordInput(e.target.value)}
-                    />
-                    <button type="submit">Login</button>
-                    {error && <p style={{ color: "red" }}>{error}</p>}
-                </form>
-            ) : (
-                <p style={{ textAlign: "center" }}>Logged in as <strong>{currentUser}</strong></p>
-            )}
-
-            <ActiveMembers members={activeMembers} />
-            {currentUser && <NewPost addPost={handleAddPost} />}
-            {currentUser && <Posts posts={posts} deletePost={handleDeletePost} currentUser={currentUser} />}
+        <div className="app-container">
+            <header>DevForum</header>
+            <ActiveMembers members={members} />
+            <NewPost currentUser={currentUser} onAddPost={handleAddPost} />
+            <Posts posts={posts} currentUser={currentUser} onDelete={handleDeletePost} />
         </div>
     );
-}
+};
+
+export default App;
