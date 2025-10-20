@@ -1,23 +1,22 @@
-import React, { useState } from "react";
-import "./NewPost.css";
+import React from "react";
+import "./Post.css";
 
-export default function NewPost({ onAdd }) {
-    const [text, setText] = useState("");
-
-    const handleAdd = () => {
-        if (text.trim() === "") return;
-        onAdd(text);
-        setText("");
-    };
-
+export default function Post({ post, onDelete, currentUser }) {
     return (
-        <div className="new-post-container">
-            <textarea
-                placeholder="Write a post..."
-                value={text}
-                onChange={e => setText(e.target.value)}
-            />
-            <button onClick={handleAdd}>Post</button>
+        <div className="post-card">
+            <div className="post-header">
+                <span className="post-author">{post.author}</span>
+                <span className="post-date">{post.date}</span>
+                {post.author === currentUser && (
+                    <button
+                        className="delete-btn"
+                        onClick={() => onDelete(post.id)}
+                    >
+                        Delete
+                    </button>
+                )}
+            </div>
+            <div className="post-content">{post.content}</div>
         </div>
     );
 }

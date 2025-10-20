@@ -1,31 +1,25 @@
-import React, {
-    useState
-}
-
-    from "react";
+import React, { useState } from "react";
 import "./NewPost.css";
 
-const NewPost = ({ onAdd }) => {
+export default function NewPost({ onAdd }) {
     const [content, setContent] = useState("");
-    const handleSubmit = () => {
-        if (!content.trim()) return;
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (content.trim() === "") return;
         onAdd(content);
         setContent("");
-    }
+    };
 
-;
-
-return (
-    <div className="new-post-container">
-        <textarea
-            placeholder="Write something..."
-            value={content}
-            onChange={e => setContent(e.target.value)}
-        />
-        <button onClick={handleSubmit}>Post</button>
-    </div>
-);
+    return (
+        <form className="newpost-form" onSubmit={handleSubmit}>
+            <textarea
+                placeholder="Write a new post..."
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                rows={4}
+            />
+            <button type="submit">Post</button>
+        </form>
+    );
 }
-;
-
-export default NewPost;
