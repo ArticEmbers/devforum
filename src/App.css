@@ -1,4 +1,3 @@
-/* General app layout */
 .app-container {
     font-family: 'Arial', sans-serif;
     background: #1a1a1a;
@@ -10,7 +9,6 @@
     padding: 20px;
 }
 
-/* Header with logout button */
 header {
     width: 100%;
     max-width: 900px;
@@ -26,7 +24,6 @@ header {
     font-size: 1.5rem;
 }
 
-    /* Logout button */
     header .logout {
         padding: 6px 12px;
         background: #a79bbb;
@@ -43,76 +40,3 @@ header {
             color: #1a1a1a;
             transform: translateY(-2px);
         }
-
-/* Posts and NewPost container styling */
-.posts-container,
-.new-post-container {
-    width: 100%;
-    max-width: 900px;
-    margin-bottom: 20px;
-}
-
-    /* NewPost box styling */
-    .new-post-container textarea {
-        width: 100%;
-        border-radius: 10px;
-        padding: 10px;
-        border: none;
-        font-size: 1rem;
-        resize: vertical;
-    }
-
-    .new-post-container button {
-        margin-top: 10px;
-        padding: 6px 15px;
-        border: none;
-        border-radius: 10px;
-        background: #a79bbb;
-        color: #fff;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.2s ease;
-    }
-
-        .new-post-container button:hover {
-            background: #d1b3e0;
-            color: #1a1a1a;
-            transform: translateY(-2px);
-        }
-
-/* Posts styling */
-.post {
-    background: linear-gradient(145deg, #5c4b8b, #7b6f95);
-    margin-bottom: 15px;
-    padding: 12px 15px;
-    border-radius: 15px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-}
-
-.post-header {
-    display: flex;
-    justify-content: space-between;
-    font-weight: bold;
-    margin-bottom: 8px;
-}
-
-.post-content {
-    white-space: pre-wrap;
-}
-
-/* Delete button inside posts */
-.post button.delete {
-    background: #e74c3c;
-    border: none;
-    border-radius: 8px;
-    padding: 4px 8px;
-    color: #fff;
-    cursor: pointer;
-    font-size: 0.85rem;
-    transition: all 0.2s ease;
-}
-
-    .post button.delete:hover {
-        background: #ff6b6b;
-        transform: translateY(-1px);
-    }

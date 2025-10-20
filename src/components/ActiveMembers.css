@@ -31,7 +31,7 @@
 
         .active-members li.admin {
             font-weight: bold;
-            color: #ffd700; /* admin highlight */
+            color: #ffd700;
         }
 
     .active-members span {
