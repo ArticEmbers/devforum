@@ -1,89 +1,62 @@
 import React, { useState, useEffect } from "react";
-import ActiveMembers from "./components/ActiveMembers";
+import { collection, addDoc, deleteDoc, doc, onSnapshot, query, orderBy } from "firebase/firestore";
+import { db } from "./firebase";
 import NewPost from "./components/NewPost";
 import Posts from "./components/Posts";
-import { db } from "./firebase";
-import {
-    collection,
-    setDoc,
-    doc,
-    deleteDoc,
-    onSnapshot,
-    query,
-    orderBy,
-    addDoc
-} from "firebase/firestore";
+import ActiveMembers from "./components/ActiveMembers";
 import "./App.css";
 
-const users = {
-    "Endurance:2008/Rapido.": { username: "Luna", role: "admin" },
-    "fyjhym-vorxU2-sarnuz": { username: "Amy", role: "member" }
-};
+// Hardcoded users
+const users = [
+    { username: "Luna", password: "Endurance:2008/Rapido.", role: "admin" },
+    { username: "Amy", password: "fyjhym-vorxU2-sarnuz", role: "member" }
+];
 
-const App = () => {
+function App() {
     const [currentUser, setCurrentUser] = useState(null);
-    const [members, setMembers] = useState([]);
     const [posts, setPosts] = useState([]);
-    const membersCol = collection(db, "activeMembers");
-    const postsCol = collection(db, "posts");
 
-    const login = (password) => {
-        if (users[password]) setCurrentUser(users[password]);
-    };
-
+    // Fetch posts live from Firestore
     useEffect(() => {
-        if (!currentUser) return;
-
-        // Add current user to activeMembers
-        setDoc(doc(membersCol, currentUser.username), currentUser);
-
-        // Listen to activeMembers
-        const unsubscribeMembers = onSnapshot(membersCol, snapshot => {
-            setMembers(snapshot.docs.map(doc => doc.data()));
-        });
-
-        // Listen to posts
-        const postsQuery = query(postsCol, orderBy("timestamp", "desc"));
-        const unsubscribePosts = onSnapshot(postsQuery, snapshot => {
+        const q = query(collection(db, "posts"), orderBy("timestamp", "desc"));
+        const unsubscribe = onSnapshot(q, (snapshot) => {
             setPosts(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
         });
+        return () => unsubscribe();
+    }, []);
 
-        return () => {
-            unsubscribeMembers();
-            unsubscribePosts();
-            deleteDoc(doc(membersCol, currentUser.username));
-        };
-    }, [currentUser]);
-
-    const handleLogout = () => {
-        deleteDoc(doc(membersCol, currentUser.username));
-        setCurrentUser(null);
+    const login = (username, password) => {
+        const user = users.find(u => u.username === username && u.password === password);
+        if (user) setCurrentUser(user);
+        else alert("Invalid credentials");
     };
 
-    const handleAddPost = async (content) => {
-        await addDoc(postsCol, {
-            author: currentUser.username,
-            role: currentUser.role,
+    const logout = () => setCurrentUser(null);
+
+    const addPost = async (content) => {
+        if (!currentUser) return;
+        await addDoc(collection(db, "posts"), {
+            username: currentUser.username,
             content,
-            timestamp: Date.now()
+            role: currentUser.role,
+            timestamp: new Date()
         });
     };
 
-    const handleDeletePost = async (id, author) => {
-        if (currentUser.username === author) {
-            await deleteDoc(doc(postsCol, id));
+    const removePost = async (id, postUser) => {
+        if (!currentUser) return;
+        if (currentUser.role === "admin" || currentUser.username === postUser) {
+            await deleteDoc(doc(db, "posts", id));
+        } else {
+            alert("You can't delete this post!");
         }
     };
 
     if (!currentUser) {
         return (
-            <div className="app-container">
-                <h2>Login</h2>
-                {Object.entries(users).map(([pass, user]) => (
-                    <button key={user.username} onClick={() => login(pass)}>
-                        {user.username}
-                    </button>
-                ))}
+            <div className="login-container">
+                <h1>Login</h1>
+                <LoginForm login={login} />
             </div>
         );
     }
@@ -91,14 +64,27 @@ const App = () => {
     return (
         <div className="app-container">
             <header>
-                DevForum
-                <button className="logout" onClick={handleLogout}>Logout</button>
+                <h1>DevForum</h1>
+                <button className="logout-btn" onClick={logout}>Logout</button>
             </header>
-            <ActiveMembers members={members} />
-            <NewPost onAdd={handleAddPost} />
-            <Posts posts={posts} currentUser={currentUser} onDelete={handleDeletePost} />
+            <ActiveMembers currentUser={currentUser} />
+            <NewPost onAdd={addPost} />
+            <Posts posts={posts} currentUser={currentUser} onDelete={removePost} />
         </div>
     );
-};
+}
+
+// Simple login form
+function LoginForm({ login }) {
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    return (
+        <div className="login-form">
+            <input placeholder="Username" value={username} onChange={e => setUsername(e.target.value)} />
+            <input placeholder="Password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
+            <button onClick={() => login(username, password)}>Login</button>
+        </div>
+    );
+}
 
 export default App;
