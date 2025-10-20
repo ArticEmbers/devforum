@@ -7,12 +7,13 @@ import "./App.css";
 
 export default function App() {
     const users = [
-        { username: "Luna", password: "Endurance:2008/Rapido.", role: "Administrator" },
-        { username: "Amy", password: "Friend1Pass", role: "Member" },
-        { username: "Friend2", password: "Friend2Pass", role: "member" },
+        { username: "Luna", password: "Endurance:2008/Rapido.", role: "admin" },
+        { username: "Amy", password: "fyjhym-vorxU2-sarnuz", role: "member" },
     ];
 
-    const [currentUser, setCurrentUser] = useState(null);
+    const [currentUser, setCurrentUser] = useState(
+        () => localStorage.getItem("currentUser") || null
+    );
     const [passwordInput, setPasswordInput] = useState("");
     const [error, setError] = useState("");
     const [posts, setPosts] = useState([]);
@@ -27,40 +28,50 @@ export default function App() {
         return () => unsubscribe();
     }, []);
 
-    // Login handler
+    // Add current user to active members
+    useEffect(() => {
+        if (currentUser) {
+            const user = users.find(u => u.username === currentUser);
+            if (user) {
+                setMembersList((prev) => {
+                    if (!prev.some((m) => m.username === user.username)) {
+                        return [...prev, { username: user.username, role: user.role }];
+                    }
+                    return prev;
+                });
+            }
+        }
+    }, [currentUser]);
+
     const handleLogin = (e) => {
         e.preventDefault();
         const user = users.find((u) => u.password === passwordInput);
         if (user) {
             setCurrentUser(user.username);
+            localStorage.setItem("currentUser", user.username); // persist login
             setPasswordInput("");
             setError("");
-
-            // Add to active members
-            setMembersList((prev) => {
-                if (!prev.some((m) => m.username === user.username)) {
-                    return [...prev, { username: user.username, role: user.role }];
-                }
-                return prev;
-            });
         } else {
             setError("Invalid password");
         }
     };
 
-    // Add post to Firestore
+    const handleLogout = () => {
+        setCurrentUser(null);
+        localStorage.removeItem("currentUser");
+    };
+
     const addPost = async (content) => {
         if (!currentUser) return;
         await addDoc(collection(db, "posts"), {
             author: currentUser,
             content,
-            createdAt: serverTimestamp(), // Firestore timestamp
+            createdAt: serverTimestamp(),
         });
     };
 
-    // Delete post
     const deletePost = async (id, author) => {
-        if (currentUser === "ArticEmbers" || currentUser === author) {
+        if (currentUser === "Luna" || currentUser === author) {
             await deleteDoc(doc(db, "posts", id));
         } else {
             alert("You can only delete your own posts!");
@@ -71,6 +82,7 @@ export default function App() {
         <div className="app">
             <header>
                 <h1>DevForum</h1>
+                {currentUser && <button onClick={handleLogout} className="logout-btn">Logout</button>}
             </header>
 
             {!currentUser ? (
