@@ -1,42 +1,81 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #5c4b8b, #e8c3f9);
+  color: #fff;
+}
+
+.app {
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+}
+
+header h1 {
+  font-family: cursive;
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.user-select {
+  margin-bottom: 20px;
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.user-select select {
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: none;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.active-members {
+  margin-bottom: 20px;
+  background: rgba(0,0,0,0.3);
+  padding: 10px;
+  border-radius: 10px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.active-members ul {
+  list-style: none;
+  padding: 0;
 }
 
-.card {
-  padding: 2em;
+.new-post textarea {
+  width: 100%;
+  border-radius: 10px;
+  border: none;
+  padding: 10px;
+  margin-bottom: 10px;
 }
 
-.read-the-docs {
-  color: #888;
+.new-post button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 10px;
+  background: #7b6f95;
+  color: #fff;
+  cursor: pointer;
+}
+
+.post {
+  background: rgba(0,0,0,0.3);
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+}
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.post-header button {
+  padding: 2px 6px;
+  border: none;
+  border-radius: 6px;
+  background: #a79bbb;
+  color: #000;
+  cursor: pointer;
 }
