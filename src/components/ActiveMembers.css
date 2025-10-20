@@ -1,10 +1,10 @@
 .active-members {
   max-width: 700px;
   margin: 20px auto;
-  background: linear-gradient(135deg, #a79bbb, #d1b3e0);
+  background: linear-gradient(135deg, #7b6f95, #d1b3e0);
   padding: 15px 20px;
   border-radius: 12px;
-  color: #5c4b8b;
+  color: #fff;
   font-family: "Cursive", sans-serif;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
@@ -31,13 +31,20 @@
   border-bottom: none;
 }
 
+/* Member role styling */
+.active-members .member {
+  color: #e8c3f9; /* bright light purple for visibility */
+  font-weight: bold;
+}
+
+/* Admin role styling */
+.active-members .admin {
+  color: #ffd700; /* gold for admin */
+  font-weight: bold;
+}
+
 .active-members .role {
   font-size: 0.9em;
   font-weight: bold;
-  color: #5c4b8b;
-}
-
-.active-members .admin {
-  color: #fff;
-  font-weight: bold;
+  margin-left: 6px;
 }

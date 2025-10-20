@@ -1,0 +1,43 @@
+.posts {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 700px;
+  margin: 20px auto;
+}
+
+.post-card {
+  background: linear-gradient(135deg, #7b6f95, #a79bbb);
+  border-radius: 12px;
+  padding: 15px;
+  color: #fff;
+  font-family: Arial, sans-serif;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-weight: bold;
+  font-family: "Cursive", sans-serif;
+}
+
+.delete-btn {
+  background: #d1b3e0;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+  color: #5c4b8b;
+  font-weight: bold;
+  transition: background 0.2s;
+}
+
+.delete-btn:hover {
+  background: #e8c3f9;
+}
+
+.post-content {
+  font-family: Arial, sans-serif;
+}
