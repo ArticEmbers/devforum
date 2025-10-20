@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { db, collection, addDoc, deleteDoc, doc, onSnapshot, query, orderBy } from "./firebase";
 import ActiveMembers from "./components/ActiveMembers";
 import NewPost from "./components/NewPost";
 import Posts from "./components/Posts";
@@ -6,8 +7,8 @@ import "./App.css";
 
 export default function App() {
     const users = [
-        { username: "ArticEmbers", password: "ArticEmbers123", role: "admin" },
-        { username: "Friend1", password: "Friend1Pass", role: "member" },
+        { username: "ArticEmbers", password: "Endurance:2008/Rapido.", role: "admin" },
+        { username: "Amy", password: "fyjhym-vorxU2-sarnuz", role: "member" },
         { username: "Friend2", password: "Friend2Pass", role: "member" },
     ];
 
@@ -17,16 +18,14 @@ export default function App() {
     const [posts, setPosts] = useState([]);
     const [membersList, setMembersList] = useState([]);
 
-    // Load posts from localStorage
+    // Subscribe to Firestore posts
     useEffect(() => {
-        const savedPosts = JSON.parse(localStorage.getItem("posts")) || [];
-        setPosts(savedPosts);
+        const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            setPosts(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        });
+        return () => unsubscribe();
     }, []);
-
-    // Save posts to localStorage
-    useEffect(() => {
-        localStorage.setItem("posts", JSON.stringify(posts));
-    }, [posts]);
 
     // Login
     const handleLogin = (e) => {
@@ -50,23 +49,19 @@ export default function App() {
     };
 
     // Add new post
-    const addPost = (content) => {
+    const addPost = async (content) => {
         if (!currentUser) return;
-        const newPost = {
-            id: Date.now(),
+        await addDoc(collection(db, "posts"), {
             author: currentUser,
             content,
-        };
-        setPosts([newPost, ...posts]);
+            createdAt: new Date(),
+        });
     };
 
-    // Delete post (admin any, user own)
-    const deletePost = (id) => {
-        const post = posts.find((p) => p.id === id);
-        if (!post) return;
-
-        if (currentUser === "ArticEmbers" || post.author === currentUser) {
-            setPosts(posts.filter((p) => p.id !== id));
+    // Delete post
+    const deletePost = async (id, author) => {
+        if (currentUser === "ArticEmbers" || currentUser === author) {
+            await deleteDoc(doc(db, "posts", id));
         } else {
             alert("You can only delete your own posts!");
         }
